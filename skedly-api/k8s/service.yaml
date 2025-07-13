@@ -9,4 +9,6 @@ spec:
     - name: http
       port: 80
       targetPort: 8080
-  type: ClusterIP
+      # Local testing.
+      nodePort: 30001
+  type: NodePort
