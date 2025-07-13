@@ -1,9 +1,7 @@
-import { Component, signal } from '@angular/core';
+import {Component, signal} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {CalendarOptions, DateSelectArg, EventApi, EventClickArg, EventInput} from '@fullcalendar/core';
+import {CalendarOptions, DateSelectArg, EventClickArg, EventInput} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 import {FullCalendarModule} from '@fullcalendar/angular';
 
@@ -33,31 +31,28 @@ export const INITIAL_EVENTS: EventInput[] = [
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, FullCalendarModule],
-  templateUrl: './app.html',
-  styleUrl: './app.scss'
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss'
 })
-export class App {
-  protected readonly title = signal('skedly-ui');
+export class AppComponent {
+  title = 'skedly-ui';
+
 
   calendarEvents = signal(INITIAL_EVENTS);
 
   calendarOptions: CalendarOptions = {
     plugins: [
-      interactionPlugin,
       dayGridPlugin,
-      timeGridPlugin,
-      listPlugin,
+      interactionPlugin,
     ],
     headerToolbar: {
-      left: 'prev,next today',
+      left: 'prev,next',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+      right: 'dayGridMonth'
     },
-    nowIndicator: true,
     datesSet: (e) => {
       console.log('DATES SET, e:', e);
     },
-    initialView: 'dayGridMonth',
     weekends: true,
     editable: true,
     selectable: true,
@@ -101,4 +96,5 @@ export class App {
       clickInfo.event.remove();
     }
   }
+
 }
