@@ -1,5 +1,5 @@
 import {Component, signal} from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {RouterOutlet} from '@angular/router';
 import {CalendarOptions, DateSelectArg, EventClickArg, EventInput} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -48,17 +48,28 @@ export class AppComponent {
     headerToolbar: {
       left: 'prev,next',
       center: 'title',
-      right: 'dayGridMonth'
+      right: 'customAddEvent'
     },
     datesSet: (e) => {
       console.log('DATES SET, e:', e);
     },
+    initialView: 'dayGridMonth',
+    height: '80vh',
     weekends: true,
     editable: true,
     selectable: true,
     selectMirror: true,
     dayMaxEvents: true,
     eventClick: this.handleEventClick.bind(this),
+    customButtons: {
+      customAddEvent: {
+        text: 'Create Event',
+        click: () => {
+          console.log('Create Event clicked');
+          // You can open your modal/dialog here
+        }
+      }
+    },
     eventsSet: (e) => {
       console.log('EVENTS SET, e:', e); //?
     },
