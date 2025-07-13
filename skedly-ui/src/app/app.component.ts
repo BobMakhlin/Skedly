@@ -5,8 +5,11 @@ import {SkedlyHeaderComponent} from './core/layout/skedly-header/skedly-header.c
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, SkedlyHeaderComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  template: `
+    <app-skedly-header></app-skedly-header>
+
+    <router-outlet></router-outlet>
+  `
 })
 export class AppComponent {
 }
