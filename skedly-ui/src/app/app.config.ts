@@ -4,7 +4,8 @@ import {provideAnimations} from '@angular/platform-browser/animations';
 
 import {routes} from './app.routes';
 import {provideTimezone} from './core/timezone/timezone.provider';
+import {provideHttpClient} from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({eventCoalescing: true}), provideRouter(routes), provideAnimations(), provideTimezone()],
+  providers: [provideZoneChangeDetection({eventCoalescing: true}), provideRouter(routes), provideAnimations(), provideTimezone(), provideHttpClient()],
 };

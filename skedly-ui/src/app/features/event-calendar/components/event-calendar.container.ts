@@ -1,83 +1,30 @@
-import {Component, EventEmitter, Input, Output, signal} from '@angular/core';
-import {FullCalendarModule} from '@fullcalendar/angular';
-import {CalendarOptions, EventInput} from '@fullcalendar/core';
-import {createMonthCalendarOptions} from '../config/skedly-ui-month-calendar.config';
+import {Component, inject, signal} from '@angular/core';
+import {EventInput} from '@fullcalendar/core';
 import {SkedlyUiMonthCalendarComponent} from './skedly-ui-month-calendar.component';
+import {getEnv} from '../../../core/env/env';
+import {EventApiService} from '../services/event-api.service';
+import {take} from 'rxjs';
 
-
-const TODAY_STR = new Date().toISOString().replace(/T.*$/, ''); // YYYY-MM-DD of today
-
-const EVENTS_1: EventInput[] = [
-  {
-    id: '1',
-    title: 'All-day event',
-    start: TODAY_STR
-  },
-  {
-    id: '2',
-    title: 'Timed event',
-    start: TODAY_STR + 'T00:00:00',
-    end: TODAY_STR + 'T03:00:00'
-  },
-  {
-    id: '3',
-    title: 'Timed event',
-    start: TODAY_STR + 'T12:00:00',
-    end: TODAY_STR + 'T15:00:00'
-  }
-];
-
-export const EVENTS_2: EventInput[] = [
-  {
-    id: '101',
-    title: 'Morning Standup',
-    start: `${TODAY_STR}T09:00:00`,
-    end: `${TODAY_STR}T09:30:00`,
-  },
-  {
-    id: '102',
-    title: 'Design Review',
-    start: `${TODAY_STR}T11:00:00`,
-    end: `${TODAY_STR}T12:00:00`,
-  },
-  {
-    id: '103',
-    title: 'Lunch Break',
-    start: `${TODAY_STR}T12:30:00`,
-    end: `${TODAY_STR}T13:30:00`,
-  },
-  {
-    id: '104',
-    title: 'Project Sync',
-    start: `${TODAY_STR}T14:00:00`,
-    end: `${TODAY_STR}T15:00:00`,
-  },
-  {
-    id: '105',
-    title: 'All-day Conference',
-    start: TODAY_STR,
-    allDay: true,
-  }];
 
 @Component({
   selector: 'app-event-calendar-container',
   imports: [
     SkedlyUiMonthCalendarComponent
   ],
+  providers: [EventApiService],
   template: `
-    <skedly-ui-month-calendar [events]="events" (lazyLoad)="onLazyLoad()" (addClick)="onAddClick()"
+    <skedly-ui-month-calendar [events]="events" (lazyLoad)="onLazyLoad($event)" (addClick)="onAddClick()"
                               (eventClick)="onEventClick($event)"></skedly-ui-month-calendar>`,
 })
 export class EventCalendarContainer {
   events = signal<EventInput[]>([]);
 
-  onLazyLoad(): void {
-    console.log('lazy load')
-    if (this.events().length === 0) {
-      this.events.set(EVENTS_1);
-    } else {
-      this.events.set(EVENTS_2);
-    }
+  private apiService = inject(EventApiService);
+
+  onLazyLoad(event: { start: Date; end: Date; }): void {
+    this.apiService.getEvents$(event.start, event.end).pipe(take(1)).subscribe((calendarEvents) => {
+      this.events.set(calendarEvents);
+    })
   }
 
   onEventClick(id: string) {
@@ -90,6 +37,7 @@ export class EventCalendarContainer {
   }
 
   onAddClick() {
+    console.log('ENV:', getEnv('apiUrl'));
     this.events.update(events => [
       ...events,
       {
