@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output, signal} from '@angular/core';
 import {FullCalendarModule} from '@fullcalendar/angular';
 import {CalendarOptions, EventInput} from '@fullcalendar/core';
-import {createMonthCalendarOptions} from './month-calendar.config';
+import {createMonthCalendarOptions} from '../config/month-calendar.config';
 
 @Component({
   selector: 'app-month-calendar',
