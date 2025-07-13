@@ -10,5 +10,5 @@ third-party:
 app:
 	@echo "Applying API manifests..."
 	kubectl apply -f ../skedly-api/k8s
-#	@echo "Applying UI manifests..."
-#	kubectl apply -f ../skedly-ui/k8s
+	@echo "Applying UI manifests..."
+	kubectl apply -f ../skedly-ui/k8s

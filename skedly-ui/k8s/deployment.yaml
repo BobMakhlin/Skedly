@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skedly-ui
+  labels:
+    app: skedly-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: skedly-ui
+  template:
+    metadata:
+      labels:
+        app: skedly-ui
+    spec:
+      containers:
+        - name: skedly-ui
+          image: borismakhlin/skedly-ui:0.0.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "20m"
+            limits:
+              memory: "64Mi"
+              cpu: "100m"
