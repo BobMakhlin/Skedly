@@ -29,7 +29,7 @@ export function createMonthCalendarOptions(
     datesSet: (args) => handlers.onLazyLoad({start: args.start, end: args.end}),
     eventClick: (args) => handlers.onEventClick(args.event.id),
     weekends: true,
-    height: '95vh',
+    height: '80vh',
     initialView: 'dayGridMonth',
   };
 }
