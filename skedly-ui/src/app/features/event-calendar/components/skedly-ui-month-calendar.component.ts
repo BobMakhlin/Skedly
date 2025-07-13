@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, Output, signal} from '@angular/core';
 import {FullCalendarModule} from '@fullcalendar/angular';
 import {CalendarOptions, EventInput} from '@fullcalendar/core';
-import {createMonthCalendarOptions} from '../config/month-calendar.config';
+import {createMonthCalendarOptions} from '../config/skedly-ui-month-calendar.config';
 
 @Component({
-  selector: 'app-month-calendar',
+  selector: 'skedly-ui-month-calendar',
   imports: [
     FullCalendarModule
   ],
@@ -17,7 +17,7 @@ import {createMonthCalendarOptions} from '../config/month-calendar.config';
     </full-calendar>
   `,
 })
-export class MonthCalendarComponent {
+export class SkedlyUiMonthCalendarComponent {
   @Input({ required: true }) events = signal<EventInput[]>([]);
   @Output() public lazyLoad: EventEmitter<{
     start: Date;

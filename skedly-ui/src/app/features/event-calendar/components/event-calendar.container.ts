@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, Output, signal} from '@angular/core';
 import {FullCalendarModule} from '@fullcalendar/angular';
 import {CalendarOptions, EventInput} from '@fullcalendar/core';
-import {createMonthCalendarOptions} from '../config/month-calendar.config';
-import {MonthCalendarComponent} from './month-calendar.component';
+import {createMonthCalendarOptions} from '../config/skedly-ui-month-calendar.config';
+import {SkedlyUiMonthCalendarComponent} from './skedly-ui-month-calendar.component';
 
 
 const TODAY_STR = new Date().toISOString().replace(/T.*$/, ''); // YYYY-MM-DD of today
@@ -60,15 +60,15 @@ export const EVENTS_2: EventInput[] = [
   }];
 
 @Component({
-  selector: 'app-calendar-container',
+  selector: 'app-event-calendar-container',
   imports: [
-    MonthCalendarComponent
+    SkedlyUiMonthCalendarComponent
   ],
   template: `
-    <app-month-calendar [events]="events" (lazyLoad)="onLazyLoad()" (addClick)="onAddClick()"
-                        (eventClick)="onEventClick($event)"></app-month-calendar>`,
+    <skedly-ui-month-calendar [events]="events" (lazyLoad)="onLazyLoad()" (addClick)="onAddClick()"
+                              (eventClick)="onEventClick($event)"></skedly-ui-month-calendar>`,
 })
-export class MonthCalendarContainer {
+export class EventCalendarContainer {
   events = signal<EventInput[]>([]);
 
   onLazyLoad(): void {

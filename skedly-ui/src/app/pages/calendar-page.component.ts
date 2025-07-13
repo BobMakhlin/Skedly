@@ -1,14 +1,14 @@
 import {Component} from '@angular/core';
-import {MonthCalendarContainer} from '../features/month-calendar/components/month-calendar.container';
+import {EventCalendarContainer} from '../features/event-calendar/components/event-calendar.container';
 
 
 @Component({
   selector: 'app-calendar-page',
   imports: [
-    MonthCalendarContainer
+    EventCalendarContainer
   ],
   template: `
-    <app-calendar-container></app-calendar-container> `
+    <app-event-calendar-container></app-event-calendar-container>`
 })
 export class CalendarPageComponent {
 }
