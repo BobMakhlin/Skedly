@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: skedly-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: skedly-api
+  template:
+    metadata:
+      labels:
+        app: skedly-api
+    spec:
+      initContainers:
+        - name: db-init
+          image: mysql:8
+          env:
+            - name: MYSQL_PWD
+              value: "rootpass"
+          command: [ "/bin/sh", "-c" ]
+          args:
+            - |
+              echo 'Waiting for MySQL to be ready...'
+              until mysql -h mysql -P 3306 -u root -e "SELECT 1;" > /dev/null 2>&1; do
+                echo "MySQL not ready. Retrying..."
+                sleep 5
+              done
+
+              echo "Creating DB and user if they don't exist..."
+              mysql -h mysql -P 3306 -u root -e "CREATE DATABASE IF NOT EXISTS skedly;"
+              mysql -h mysql -P 3306 -u root -e "CREATE USER IF NOT EXISTS 'skedly_user'@'%' IDENTIFIED BY 'skedly_pass';"
+              mysql -h mysql -P 3306 -u root -e "GRANT ALL PRIVILEGES ON skedly.* TO 'skedly_user'@'%';"
+              echo "Init complete."
+      containers:
+        - name: skedly-api
+          image: borismakhlin/skedly-api:0.0.1
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql:3306/skedly
+            - name: SPRING_DATASOURCE_USERNAME
+              value: skedly_user
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: skedly_pass

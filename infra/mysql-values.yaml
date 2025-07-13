@@ -1,0 +1,9 @@
+auth:
+  rootPassword: rootpass
+
+primary:
+  service:
+    port: 3306
+  persistence:
+    enabled: true
+    size: 8Gi
