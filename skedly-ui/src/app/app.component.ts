@@ -1,13 +1,10 @@
-import {Component, signal} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
-import {CalendarOptions, DateSelectArg, EventClickArg, EventInput} from '@fullcalendar/core';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import {FullCalendarModule} from '@fullcalendar/angular';
+import {Component, signal, Signal, WritableSignal} from '@angular/core';
+import {MonthCalendarComponent} from './features/month-calendar/month-calendar.component';
+import {EventInput} from '@fullcalendar/core';
 
 const TODAY_STR = new Date().toISOString().replace(/T.*$/, ''); // YYYY-MM-DD of today
 
-export const INITIAL_EVENTS: EventInput[] = [
+const EVENTS_1: EventInput[] = [
   {
     id: '1',
     title: 'All-day event',
@@ -27,85 +24,85 @@ export const INITIAL_EVENTS: EventInput[] = [
   }
 ];
 
+export const EVENTS_2: EventInput[] = [
+  {
+    id: '101',
+    title: 'Morning Standup',
+    start: `${TODAY_STR}T09:00:00`,
+    end: `${TODAY_STR}T09:30:00`,
+  },
+  {
+    id: '102',
+    title: 'Design Review',
+    start: `${TODAY_STR}T11:00:00`,
+    end: `${TODAY_STR}T12:00:00`,
+  },
+  {
+    id: '103',
+    title: 'Lunch Break',
+    start: `${TODAY_STR}T12:30:00`,
+    end: `${TODAY_STR}T13:30:00`,
+  },
+  {
+    id: '104',
+    title: 'Project Sync',
+    start: `${TODAY_STR}T14:00:00`,
+    end: `${TODAY_STR}T15:00:00`,
+  },
+  {
+    id: '105',
+    title: 'All-day Conference',
+    start: TODAY_STR,
+    allDay: true,
+  },
+];
+
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FullCalendarModule],
+  imports: [MonthCalendarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'skedly-ui';
+  events = signal<EventInput[]>([]);
 
-
-  calendarEvents = signal(INITIAL_EVENTS);
-
-  calendarOptions: CalendarOptions = {
-    plugins: [
-      dayGridPlugin,
-      interactionPlugin,
-    ],
-    headerToolbar: {
-      left: 'prev,next',
-      center: 'title',
-      right: 'customAddEvent'
-    },
-    datesSet: (e) => {
-      console.log('DATES SET, e:', e);
-    },
-    initialView: 'dayGridMonth',
-    height: '80vh',
-    weekends: true,
-    editable: true,
-    selectable: true,
-    selectMirror: true,
-    dayMaxEvents: true,
-    eventClick: this.handleEventClick.bind(this),
-    customButtons: {
-      customAddEvent: {
-        text: 'Create Event',
-        click: () => {
-          console.log('Create Event clicked');
-          // You can open your modal/dialog here
-        }
-      }
-    },
-    eventsSet: (e) => {
-      console.log('EVENTS SET, e:', e); //?
-    },
-    eventAdd: (e) => {
-      console.log('EVENT ADD, e:', e);
-    },
-    eventChange: (e) => {
-      console.log('EVENT CHANGE, e:', e);
-    },
-    eventRemove: (e) => {
-      console.log('EVENT REMOVE, e:', e);
-    },
-    select: this.handleDateSelect.bind(this),
-  };
-
-  handleDateSelect(selectInfo: DateSelectArg) {
-    const title = prompt('Please enter a new title for your event');
-    const calendarApi = selectInfo.view.calendar;
-
-    calendarApi.unselect(); // clear date selection
-
-    if (title) {
-      calendarApi.addEvent({
-        id: '10',
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay
-      });
+  onLazyLoad(): void {
+    console.log('lazy load')
+    if (this.events().length === 0) {
+      this.events.set(EVENTS_1);
+    } else {
+      this.events.set(EVENTS_2);
     }
   }
 
-  handleEventClick(clickInfo: EventClickArg) {
-    if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove();
-    }
+  onEventClick(id: string) {
+    this.editEvent({
+      id,
+      title: 'Updated Timed Event',
+      start: '2025-07-15T08:00:00',
+      end: '2025-07-15T09:00:00'
+    });
+  }
+
+  onAddClick() {
+    this.events.update(events => [
+      ...events,
+      {
+        id: '106',
+        title: 'New Meeting',
+        start: '2025-07-14T10:00:00',
+        end: '2025-07-14T11:00:00',
+      }
+    ]);
+  }
+
+  editEvent(updated: EventInput) {
+    this.events.update(events =>
+      events.map(event =>
+        event.id === updated.id ? { ...event, ...updated } : event
+      )
+    );
   }
 
 }

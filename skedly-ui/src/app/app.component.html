@@ -1,6 +1,1 @@
-<full-calendar [options]="calendarOptions" [events]="calendarEvents()">
-  <ng-template #eventContent let-arg>
-    <b>{{ arg.timeText }}</b>
-    <i>{{ arg.event.title }}</i>
-  </ng-template>
-</full-calendar>
+<app-month-calendar [events]="events" (lazyLoad)="onLazyLoad()" (addClick)="onAddClick()" (eventClick)="onEventClick($event)"></app-month-calendar>
