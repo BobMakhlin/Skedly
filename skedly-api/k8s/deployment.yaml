@@ -44,3 +44,10 @@ spec:
               value: skedly_user
             - name: SPRING_DATASOURCE_PASSWORD
               value: skedly_pass
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
