@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {CalendarEvent} from '../models/calendar-event.model';
+import {CalendarEvent} from '../../event/models/calendar-event.model';
 import {Observable} from 'rxjs';
 import {EventModalComponent} from '../components/event-modal/event-modal.component';
 import {EventModalResult} from '../models/event-modal-result.model';

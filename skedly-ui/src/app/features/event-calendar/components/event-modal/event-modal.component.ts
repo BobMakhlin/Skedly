@@ -6,10 +6,11 @@ import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
-import {CalendarEvent} from '../../models/calendar-event.model';
+import {CalendarEvent} from '../../../event/models/calendar-event.model';
 import {NgIf} from '@angular/common';
 import {MatDatetimepickerModule, MatNativeDatetimeModule} from '@mat-datetimepicker/core';
 import {EventModalResult, EventModalResultOperation} from '../../models/event-modal-result.model';
+import {UpdateCalendarEvent} from '../../../event/models/add-calendar-event.model';
 
 @Component({
   selector: 'app-event-modal',
@@ -53,7 +54,7 @@ export class EventModalComponent {
     this.form.markAllAsTouched();
     if (this.form.valid) {
       this.dialogRef.close({
-        updateCalendarEvent: this.form.value as Partial<CalendarEvent>,
+        updateCalendarEvent: this.form.value as Partial<UpdateCalendarEvent>,
         operation
       });
     }

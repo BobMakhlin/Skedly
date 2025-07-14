@@ -1,11 +1,12 @@
 import {Component, inject, signal} from '@angular/core';
 import {EventInput} from '@fullcalendar/core';
 import {SkedlyUiMonthCalendarComponent} from '../skedly-ui-month-calendar.component';
-import {EventApiService} from '../../services/event-api.service';
+import {EventApiService} from '../../../event/services/event-api.service';
 import {filter, take} from 'rxjs';
 import {EventModalFacadeService} from '../../services/event-modal.facade';
 import {EventModalResultOperation} from '../../models/event-modal-result.model';
 import {Router} from '@angular/router';
+import {UpdateCalendarEvent} from '../../../event/models/add-calendar-event.model';
 
 
 @Component({
@@ -47,6 +48,9 @@ export class EventCalendarContainer {
           state: eventModalResult.updateCalendarEvent,
         }).then();
       } else if (eventModalResult.operation === EventModalResultOperation.Submit) {
+        this.apiService.postEvent$(eventModalResult.updateCalendarEvent as UpdateCalendarEvent).pipe(take(1)).subscribe(calendarEvent => {
+          this.events.update(events => [...events, calendarEvent]);
+        })
       }
     });
   }

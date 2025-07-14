@@ -1,4 +1,4 @@
-import {UpdateCalendarEvent} from './add-calendar-event.model';
+import {UpdateCalendarEvent} from '../../event/models/add-calendar-event.model';
 
 export enum EventModalResultOperation {
   Submit,
