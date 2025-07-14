@@ -30,7 +30,7 @@ import {MatDatetimepickerModule, MatNativeDatetimeModule} from '@mat-datetimepic
 })
 export class EventModalComponent {
   private fb: FormBuilder = inject(FormBuilder);
-  public data: Partial<CalendarEvent> = inject(MAT_DIALOG_DATA);
+  public data?: Partial<CalendarEvent> = inject(MAT_DIALOG_DATA);
 
   form = this.fb.group({
     title: ['', Validators.required],
