@@ -1,0 +1,9 @@
+<ng-container *ngIf="isNew(); else existing">
+  <p>New Event</p>
+  <pre>{{ initialData() | json }}</pre>
+</ng-container>
+
+<ng-template #existing>
+  <p>Existing Event</p>
+  <!--  <pre>{{ event() | json }}</pre>-->
+</ng-template>

@@ -2,8 +2,10 @@ import {Component, inject, signal} from '@angular/core';
 import {EventInput} from '@fullcalendar/core';
 import {SkedlyUiMonthCalendarComponent} from '../skedly-ui-month-calendar.component';
 import {EventApiService} from '../../services/event-api.service';
-import {take} from 'rxjs';
+import {filter, take} from 'rxjs';
 import {EventModalFacadeService} from '../../services/event-modal.facade';
+import {EventModalResultOperation} from '../../models/event-modal-result.model';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -21,6 +23,7 @@ export class EventCalendarContainer {
 
   private apiService = inject(EventApiService);
   private eventModalFacade = inject(EventModalFacadeService);
+  private router: Router = inject(Router);
 
   onLazyLoad(event: { start: Date; end: Date; }): void {
     this.apiService.getEvents$(event.start, event.end).pipe(take(1)).subscribe((calendarEvents) => {
@@ -38,7 +41,14 @@ export class EventCalendarContainer {
   }
 
   onAddClick() {
-    this.eventModalFacade.openCreateModal$().pipe(take(1)).subscribe();
+    this.eventModalFacade.openCreateModal$().pipe(take(1), filter(Boolean)).subscribe(eventModalResult => {
+      if (eventModalResult.operation === EventModalResultOperation.OpenEventDetails) {
+        this.router.navigate(['/events/new'], {
+          state: eventModalResult.updateCalendarEvent,
+        }).then();
+      } else if (eventModalResult.operation === EventModalResultOperation.Submit) {
+      }
+    });
   }
 
   editEvent(updated: EventInput) {

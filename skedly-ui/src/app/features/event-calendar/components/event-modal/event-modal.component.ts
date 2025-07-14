@@ -1,6 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogModule} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
@@ -9,6 +9,7 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {CalendarEvent} from '../../models/calendar-event.model';
 import {NgIf} from '@angular/common';
 import {MatDatetimepickerModule, MatNativeDatetimeModule} from '@mat-datetimepicker/core';
+import {EventModalResult, EventModalResultOperation} from '../../models/event-modal-result.model';
 
 @Component({
   selector: 'app-event-modal',
@@ -30,6 +31,7 @@ import {MatDatetimepickerModule, MatNativeDatetimeModule} from '@mat-datetimepic
 })
 export class EventModalComponent {
   private fb: FormBuilder = inject(FormBuilder);
+  private dialogRef: MatDialogRef<EventModalComponent, EventModalResult> = inject(MatDialogRef<EventModalComponent, EventModalResult>);
   public data?: Partial<CalendarEvent> = inject(MAT_DIALOG_DATA);
 
   form = this.fb.group({
@@ -38,21 +40,22 @@ export class EventModalComponent {
     start: [null, Validators.required],
     end: [null, Validators.required]
   });
-  //
-  // constructor(
-  //   @Inject(MAT_DIALOG_DATA) public data: Partial<CalendarEvent> | null,
-  //   // private dialogRef: MatDialogRef<EventModalComponent>
-  // ) {
-  //   // if (data) this.form.patchValue(data);
-  // }
 
   onSubmit() {
-    if (this.form.valid) {
-      // this.dialogRef.close(this.form.value);
-    }
+    this.closeWithResult(EventModalResultOperation.Submit);
   }
 
-  onDetails() {
-    // this.dialogRef.close({action: 'details', id: this.data?.id});
+  onOpenEventDetails() {
+    this.closeWithResult(EventModalResultOperation.OpenEventDetails);
+  }
+
+  private closeWithResult(operation: EventModalResultOperation): void {
+    this.form.markAllAsTouched();
+    if (this.form.valid) {
+      this.dialogRef.close({
+        updateCalendarEvent: this.form.value as Partial<CalendarEvent>,
+        operation
+      });
+    }
   }
 }

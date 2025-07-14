@@ -4,7 +4,7 @@
 
   <mat-form-field appearance="fill" class="w-full">
     <mat-label>Title</mat-label>
-    <input matInput formControlName="title" required />
+    <input matInput formControlName="title" required/>
     <mat-error *ngIf="form.get('title')?.hasError('required')">Title is required</mat-error>
   </mat-form-field>
 
@@ -15,14 +15,14 @@
 
   <mat-form-field appearance="fill" class="w-full">
     <mat-label>Start</mat-label>
-    <input matInput [matDatetimepicker]="startPicker" formControlName="start" />
+    <input matInput [matDatetimepicker]="startPicker" formControlName="start"/>
     <mat-datetimepicker-toggle matSuffix [for]="startPicker"></mat-datetimepicker-toggle>
     <mat-datetimepicker #startPicker type="datetime"></mat-datetimepicker>
   </mat-form-field>
 
   <mat-form-field appearance="fill" class="w-full">
     <mat-label>End</mat-label>
-    <input matInput [matDatetimepicker]="endPicker" formControlName="end" />
+    <input matInput [matDatetimepicker]="endPicker" formControlName="end"/>
     <mat-datetimepicker-toggle matSuffix [for]="endPicker"></mat-datetimepicker-toggle>
     <mat-datetimepicker #endPicker type="datetime"></mat-datetimepicker>
   </mat-form-field>
@@ -30,7 +30,7 @@
 </form>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="onDetails()" *ngIf="data?.id">Details</button>
+  <button mat-button (click)="onOpenEventDetails()">Open Details</button>
   <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-flat-button color="primary" [disabled]="form.invalid" (click)="onSubmit()">Save</button>
+  <button mat-flat-button color="primary" (click)="onSubmit()">Save</button>
 </mat-dialog-actions>
