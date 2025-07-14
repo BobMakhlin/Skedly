@@ -1,5 +1,6 @@
 package io.bobmakhlin.skedlyservice.swagger.api;
 
+import io.bobmakhlin.skedlyservice.swagger.models.UpdateCalendarEvent;
 import io.bobmakhlin.skedlyservice.swagger.models.CalendarEvent;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -35,15 +36,14 @@ public class EventController {
 
     @PostMapping
     @Operation(summary = "Create new event")
-    public CalendarEvent create(@Valid @RequestBody CalendarEvent dto) {
-        return eventApiDelegate.create(dto);
+    public CalendarEvent create(@Valid @RequestBody UpdateCalendarEvent updateCalendarEvent) {
+        return eventApiDelegate.create(updateCalendarEvent);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update existing event")
-    public CalendarEvent update(@PathVariable UUID id, @Valid @RequestBody CalendarEvent dto) {
-        dto.setId(id);
-        return eventApiDelegate.update(dto);
+    public CalendarEvent update(@PathVariable UUID id, @Valid @RequestBody UpdateCalendarEvent updateCalendarEvent) {
+        return eventApiDelegate.update(id, updateCalendarEvent);
     }
 
     @DeleteMapping("/{id}")

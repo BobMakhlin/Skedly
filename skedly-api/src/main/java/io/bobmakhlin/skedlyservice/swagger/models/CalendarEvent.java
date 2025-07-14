@@ -15,6 +15,9 @@ public class CalendarEvent {
     @Schema(description = "Title of the event", example = "Meeting with team")
     private String title;
 
+    @Schema(description = "Description of the event", example = "Meeting with team")
+    private String description;
+
     @Schema(description = "Start datetime in ISO 8601 format", example = "2025-07-14T10:00:00Z")
     private Instant start;
 
