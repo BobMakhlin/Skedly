@@ -1,4 +1,4 @@
 window.__env = {
-  apiUrl: "location:8080",
+  apiUrl: "http://localhost:5010/skedly-api",
   environment: "local"
 };

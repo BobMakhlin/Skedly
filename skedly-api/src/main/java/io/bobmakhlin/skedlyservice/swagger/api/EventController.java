@@ -28,8 +28,8 @@ public class EventController {
     @GetMapping
     @Operation(summary = "Get all events in date range")
     public List<CalendarEvent> getEvents(
-            @RequestParam @Parameter(description = "Start date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant startDate,
-            @RequestParam @Parameter(description = "End date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant endDate
+            @RequestParam @Parameter(description = "Start date") Instant startDate,
+            @RequestParam @Parameter(description = "End date") Instant endDate
     ) {
         return eventApiDelegate.getEventsInRange(startDate, endDate);
     }
