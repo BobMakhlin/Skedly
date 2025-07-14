@@ -1,9 +1,9 @@
 import {Component, inject, signal} from '@angular/core';
 import {EventInput} from '@fullcalendar/core';
-import {SkedlyUiMonthCalendarComponent} from './skedly-ui-month-calendar.component';
-import {getEnv} from '../../../core/env/env.utils';
-import {EventApiService} from '../services/event-api.service';
+import {SkedlyUiMonthCalendarComponent} from '../skedly-ui-month-calendar.component';
+import {EventApiService} from '../../services/event-api.service';
 import {take} from 'rxjs';
+import {EventModalFacadeService} from '../../services/event-modal.facade';
 
 
 @Component({
@@ -11,7 +11,7 @@ import {take} from 'rxjs';
   imports: [
     SkedlyUiMonthCalendarComponent
   ],
-  providers: [EventApiService],
+  providers: [EventApiService, EventModalFacadeService],
   template: `
     <skedly-ui-month-calendar [events]="events" (lazyLoad)="onLazyLoad($event)" (addClick)="onAddClick()"
                               (eventClick)="onEventClick($event)"></skedly-ui-month-calendar>`,
@@ -20,6 +20,7 @@ export class EventCalendarContainer {
   events = signal<EventInput[]>([]);
 
   private apiService = inject(EventApiService);
+  private eventModalFacade = inject(EventModalFacadeService);
 
   onLazyLoad(event: { start: Date; end: Date; }): void {
     this.apiService.getEvents$(event.start, event.end).pipe(take(1)).subscribe((calendarEvents) => {
@@ -37,16 +38,7 @@ export class EventCalendarContainer {
   }
 
   onAddClick() {
-    console.log('ENV:', getEnv('apiUrl'));
-    this.events.update(events => [
-      ...events,
-      {
-        id: '106',
-        title: 'New Meeting',
-        start: '2025-07-14T10:00:00',
-        end: '2025-07-14T11:00:00',
-      }
-    ]);
+    this.eventModalFacade.openCreateModal$().pipe(take(1)).subscribe();
   }
 
   editEvent(updated: EventInput) {

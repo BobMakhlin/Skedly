@@ -1,4 +1,4 @@
-export interface AddCalendarEvent {
+export interface UpdateCalendarEvent {
   title: string;
   start: string;
   end: string;

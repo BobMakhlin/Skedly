@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {EventCalendarContainer} from '../features/event-calendar/components/event-calendar.container';
+import {EventCalendarContainer} from '../features/event-calendar/components/containers/event-calendar.container';
 
 
 @Component({
