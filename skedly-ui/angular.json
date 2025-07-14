@@ -29,6 +29,16 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "env.prod.js",
+                "input": "src",
+                "output": "."
+              },
+              {
+                "glob": "env.js",
+                "input": "src",
+                "output": "."
               }
             ],
             "styles": [

@@ -1,7 +1,7 @@
 import {Component, inject, signal} from '@angular/core';
 import {EventInput} from '@fullcalendar/core';
 import {SkedlyUiMonthCalendarComponent} from './skedly-ui-month-calendar.component';
-import {getEnv} from '../../../core/env/env';
+import {getEnv} from '../../../core/env/env.utils';
 import {EventApiService} from '../services/event-api.service';
 import {take} from 'rxjs';
 

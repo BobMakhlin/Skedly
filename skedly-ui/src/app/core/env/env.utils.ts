@@ -1,15 +1,15 @@
-export interface Env {
+export interface EnvUtils {
   apiUrl: string;
   production: boolean;
 }
 
 declare global {
   interface Window {
-    __env: Env;
+    __env: EnvUtils;
   }
 }
 
-export function getEnv<T extends keyof Env>(key: T): Env[T] {
+export function getEnv<T extends keyof EnvUtils>(key: T): EnvUtils[T] {
   if (!window.__env) {
     throw new Error('Runtime environment is not loaded');
   }

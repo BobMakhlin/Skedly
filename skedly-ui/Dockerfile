@@ -22,20 +22,20 @@ RUN npm run build
 
 FROM nginxinc/nginx-unprivileged:alpine AS runner
 
-# Use a built-in non-root user for security best practices
-USER nginx
-
 # Copy the static build output from the build stage to Nginx's default HTML serving directory
 COPY --chown=nginx:nginx --from=builder /app/dist/*/browser /usr/share/nginx/html
 
-# Copy the script into the image
-COPY env-config.sh /usr/share/nginx/html/assets/env-config.sh
-# Make sure it's executable
-RUN chmod +x /usr/share/nginx/html/assets/env-config.sh
+COPY --chown=nginx:nginx --chmod=755 entrypoint.sh /entrypoint.sh
+
+USER root
+RUN chown nginx:nginx /usr/share/nginx/html
+
+# Use a built-in non-root user for security best practices
+USER nginx
 
 # Expose port 8080 to allow HTTP traffic
 # Note: The default NGINX container now listens on port 8080 instead of 80
 EXPOSE 8080
 
 # Start Nginx directly with custom config
-CMD ["/bin/sh", "-c", "/usr/share/nginx/html/assets/env-config.sh && nginx -g 'daemon off;'"]
+ENTRYPOINT ["/entrypoint.sh"]

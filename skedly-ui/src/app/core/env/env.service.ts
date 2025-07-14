@@ -1,17 +1,7 @@
 import {Injectable} from '@angular/core';
-import {Env, getEnv} from './env';
+import {getEnv} from './env.utils';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class EnvService {
-  get<T extends keyof Env>(key: T): Env[T] {
-    return getEnv(key);
-  }
-
-  get apiUrl(): string {
-    return this.get('apiUrl');
-  }
-
-  get isProduction(): boolean {
-    return this.get('production');
-  }
+  public readonly apiUrl = getEnv('apiUrl');
 }

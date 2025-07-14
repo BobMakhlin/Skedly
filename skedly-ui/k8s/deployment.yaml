@@ -27,3 +27,8 @@ spec:
             limits:
               memory: "64Mi"
               cpu: "100m"
+          env:
+            - name: API_URL
+              value: "localhost:30001"
+            - name: ENVIRONMENT
+              value: "production"
