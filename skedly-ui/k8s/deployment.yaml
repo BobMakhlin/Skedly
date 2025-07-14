@@ -29,6 +29,6 @@ spec:
               cpu: "100m"
           env:
             - name: API_URL
-              value: "localhost:30001"
+              value: "http://localhost:30001/skedly-api"
             - name: ENVIRONMENT
               value: "production"
