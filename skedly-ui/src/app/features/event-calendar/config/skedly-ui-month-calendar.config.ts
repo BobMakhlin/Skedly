@@ -1,7 +1,7 @@
 import {CalendarOptions} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import momentTimezonePlugin from '@fullcalendar/moment-timezone'
+import luxonPlugin from '@fullcalendar/luxon3'
 
 export interface MonthCalendarHandlers {
   onAddClick(): void;
@@ -15,7 +15,7 @@ export function createMonthCalendarOptions(
   handlers: MonthCalendarHandlers
 ): CalendarOptions {
   return {
-    plugins: [dayGridPlugin, interactionPlugin, momentTimezonePlugin],
+    plugins: [dayGridPlugin, interactionPlugin, luxonPlugin],
     headerToolbar: {
       left: 'prev,next',
       center: 'title',

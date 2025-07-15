@@ -42,7 +42,7 @@ export class EventCalendarContainer {
   onEventClick(id: string) {
     const eventInput = this.events().find(e => e.id === id);
     if (eventInput) {
-      this.eventModalFacade.openEditModal$(eventInputToUpdateCalendarEvent(eventInput)).subscribe(eventModalResult => {
+      this.eventModalFacade.openEditModal$(eventInputToUpdateCalendarEvent(eventInput)).pipe(take(1), filter(Boolean)).subscribe(eventModalResult => {
         if (eventModalResult.operation === EventModalResultOperation.OpenEventDetails) {
           this.router.navigate([`/events/${id}`]).then();
         } else if (eventModalResult.operation === EventModalResultOperation.Submit) {

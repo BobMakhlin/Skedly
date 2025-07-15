@@ -14,8 +14,8 @@ const DEFAULT_TIMEZONE = 'UTC';
 export class TimezoneService implements ReadonlyTimezone, WritableTimezone {
   private readonly _timezone$ = new BehaviorSubject<string>(this.readInitialTimezone());
 
-  availableTimezones$: Observable<string[]> = of(Intl.supportedValuesOf?.('timeZone') ?? ['UTC']);
-  timezone$ = this._timezone$;
+  readonly availableTimezones$: Observable<string[]> = of(Intl.supportedValuesOf?.('timeZone') ?? ['UTC']);
+  readonly timezone$ = this._timezone$;
 
   setTimezone$(tz: string): Observable<void> {
     return defer(() => {
@@ -36,5 +36,9 @@ export class TimezoneService implements ReadonlyTimezone, WritableTimezone {
   private readInitialTimezone(): string {
     const userDefinedTimezone = localStorage.getItem('timezone');
     return userDefinedTimezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone ?? DEFAULT_TIMEZONE;
+  }
+
+  get timezone(): string {
+    return this._timezone$.value;
   }
 }

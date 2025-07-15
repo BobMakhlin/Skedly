@@ -2,9 +2,11 @@ import {Observable} from 'rxjs';
 import {InjectionToken} from '@angular/core';
 
 export interface ReadonlyTimezone {
-  timezone$: Observable<string>;
+  readonly timezone$: Observable<string>;
 
-  availableTimezones$: Observable<string[]>;
+  readonly availableTimezones$: Observable<string[]>;
+
+  get timezone(): string;
 }
 
 export interface WritableTimezone {
