@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: skedly-ui
-          image: borismakhlin/skedly-ui:0.0.1
+          image: borismakhlin/skedly-ui:0.0.2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
