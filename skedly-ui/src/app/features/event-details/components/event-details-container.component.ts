@@ -77,7 +77,7 @@ export class EventDetailsContainerComponent {
     });
   }
 
-  onSave() {
+  onSave(): void {
     if (this.id() === 'new') {
       this.apiService.postEvent$(this.formService.getValue() as UpdateCalendarEvent).pipe(take(1)).subscribe(calendarEvent => {
         this.router.navigateByUrl(`/events/${calendarEvent.id}`).then();
@@ -87,5 +87,12 @@ export class EventDetailsContainerComponent {
         this.formService.patchValue(calendarEvent);
       })
     }
+  }
+
+  onDelete(): void {
+    this.apiService.deleteEvent$(this.id() as string).pipe(take(1))
+      .subscribe(() => {
+        this.router.navigateByUrl('/').then();
+      })
   }
 }

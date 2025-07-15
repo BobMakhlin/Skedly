@@ -9,7 +9,7 @@
     <!-- Title -->
     <mat-form-field appearance="fill" class="w-full">
       <mat-label>Title</mat-label>
-      <input matInput formControlName="title" />
+      <input matInput formControlName="title"/>
       <mat-error *ngIf="form.get('title')?.hasError('required')">Title is required</mat-error>
     </mat-form-field>
 
@@ -48,7 +48,7 @@
     <!-- Location -->
     <mat-form-field appearance="fill" class="w-full">
       <mat-label>Location</mat-label>
-      <input matInput formControlName="location" />
+      <input matInput formControlName="location"/>
     </mat-form-field>
 
     <!-- Cross-field validation -->
@@ -59,6 +59,9 @@
     <div class="button-row">
       <button mat-raised-button color="primary" type="submit" (click)="onSave()">
         Save
+      </button>
+      <button mat-raised-button color="warn" type="submit" (click)="onDelete()">
+        Delete
       </button>
     </div>
   </form>
