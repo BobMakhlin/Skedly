@@ -29,6 +29,8 @@ export class EventBasicFormService {
     validators: [startBeforeEndValidator()]
   });
 
+  // TODO: consider defining timezone globally for datepickers.
+
   public patchValue(value: Partial<UpdateCalendarEvent>): void {
     const start = value.start ? applyTimeZone(value.start, this.readonlyTimezone.timezone) : null;
     const end = value.end ? applyTimeZone(value.end, this.readonlyTimezone.timezone) : null;
