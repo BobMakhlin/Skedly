@@ -7,6 +7,7 @@ import {EventModalFacadeService} from '../../services/event-modal.facade';
 import {EventModalResultOperation} from '../../models/event-modal-result.model';
 import {Router} from '@angular/router';
 import {UpdateCalendarEvent} from '../../../event/models/add-calendar-event.model';
+import {eventInputToUpdateCalendarEvent} from '../../../event/mappers/event.mapper';
 
 
 @Component({
@@ -33,12 +34,20 @@ export class EventCalendarContainer {
   }
 
   onEventClick(id: string) {
-    this.editEvent({
-      id,
-      title: 'Updated Timed Event',
-      start: '2025-07-15T08:00:00',
-      end: '2025-07-15T09:00:00'
-    });
+    const eventInput = this.events().find(e => e.id === id);
+    if (eventInput) {
+      this.eventModalFacade.openEditModal$(eventInputToUpdateCalendarEvent(eventInput)).subscribe(eventModalResult => {
+        if (eventModalResult.operation === EventModalResultOperation.OpenEventDetails) {
+          this.router.navigate([`/events/${id}`]).then();
+        } else if (eventModalResult.operation === EventModalResultOperation.Submit) {
+          this.apiService.putEvent$(id, eventModalResult.updateCalendarEvent as UpdateCalendarEvent).pipe(take(1)).subscribe(calendarEvent => {
+            this.events.update(events => events.map(event =>
+              event === eventInput ? calendarEvent : event
+            ));
+          })
+        }
+      });
+    }
   }
 
   onAddClick() {
@@ -53,13 +62,5 @@ export class EventCalendarContainer {
         })
       }
     });
-  }
-
-  editEvent(updated: EventInput) {
-    this.events.update(events =>
-      events.map(event =>
-        event.id === updated.id ? {...event, ...updated} : event
-      )
-    );
   }
 }

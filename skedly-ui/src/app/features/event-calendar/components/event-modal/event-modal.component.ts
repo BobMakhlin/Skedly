@@ -6,7 +6,6 @@ import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
-import {CalendarEvent} from '../../../event/models/calendar-event.model';
 import {NgIf} from '@angular/common';
 import {MatDatetimepickerModule, MatNativeDatetimeModule} from '@mat-datetimepicker/core';
 import {EventModalResult, EventModalResultOperation} from '../../models/event-modal-result.model';
@@ -33,14 +32,20 @@ import {UpdateCalendarEvent} from '../../../event/models/add-calendar-event.mode
 export class EventModalComponent {
   private fb: FormBuilder = inject(FormBuilder);
   private dialogRef: MatDialogRef<EventModalComponent, EventModalResult> = inject(MatDialogRef<EventModalComponent, EventModalResult>);
-  public data?: Partial<CalendarEvent> = inject(MAT_DIALOG_DATA);
+  public data?: Partial<UpdateCalendarEvent> = inject(MAT_DIALOG_DATA);
 
   form = this.fb.group({
-    title: ['', Validators.required],
-    description: [''],
-    start: [null, Validators.required],
-    end: [null, Validators.required]
+    title: this.fb.control('', {validators: [Validators.required]}),
+    description: this.fb.control(''),
+    start: this.fb.control<string | null>(null, {validators: [Validators.required]}),
+    end: this.fb.control<string | null>(null, {validators: [Validators.required]}),
   });
+
+  constructor() {
+    if (this.data) {
+      this.form.patchValue(this.data);
+    }
+  }
 
   onSubmit() {
     this.closeWithResult(EventModalResultOperation.Submit);
