@@ -26,6 +26,10 @@ export class EventApiService {
     return this.http.put<CalendarEvent>(`${this.env.apiUrl}/events/${eventId}`, event);
   }
 
+  getEvent$(eventId: string): Observable<CalendarEvent> {
+    return this.http.get<CalendarEvent>(`${this.env.apiUrl}/events/${eventId}`);
+  }
+
   deleteEvent$(eventId: string): Observable<void> {
     return this.http.delete<void>(`${this.env.apiUrl}/events/${eventId}`);
   }

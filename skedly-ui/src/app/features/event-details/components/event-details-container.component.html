@@ -1,9 +1,54 @@
-<ng-container *ngIf="isNew(); else existing">
-  <p>New Event</p>
-  <pre>{{ initialData() | json }}</pre>
-</ng-container>
+<div *ngIf="isLoading(); else content">
+  <div class="spinner-container">
+    <mat-progress-spinner mode="indeterminate" color="primary"></mat-progress-spinner>
+  </div>
+</div>
 
-<ng-template #existing>
-  <p>Existing Event</p>
-  <!--  <pre>{{ event() | json }}</pre>-->
+<ng-template #content>
+  <form [formGroup]="form" class="form-container">
+    <!-- Title -->
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" />
+      <mat-error *ngIf="form.get('title')?.hasError('required')">Title is required</mat-error>
+    </mat-form-field>
+
+    <!-- Description -->
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" rows="3"></textarea>
+    </mat-form-field>
+
+    <!-- Start -->
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Start</mat-label>
+      <input
+        matInput
+        [matDatetimepicker]="startPicker"
+        formControlName="start"
+      />
+      <mat-datetimepicker-toggle matSuffix [for]="startPicker"></mat-datetimepicker-toggle>
+      <mat-datetimepicker #startPicker type="datetime"></mat-datetimepicker>
+      <mat-error *ngIf="form.get('start')?.hasError('required')">Start is required</mat-error>
+    </mat-form-field>
+
+    <!-- End -->
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>End</mat-label>
+      <input
+        matInput
+        [matDatetimepicker]="endPicker"
+        formControlName="end"
+      />
+      <mat-datetimepicker-toggle matSuffix [for]="endPicker"></mat-datetimepicker-toggle>
+      <mat-datetimepicker #endPicker type="datetime"></mat-datetimepicker>
+      <mat-error *ngIf="form.get('end')?.hasError('required')">End is required</mat-error>
+    </mat-form-field>
+
+    <!-- Cross-field validation -->
+    <mat-error *ngIf="form.errors?.['startAfterEnd']">
+      Start must be before end
+    </mat-error>
+  </form>
+
 </ng-template>

@@ -1,44 +1,79 @@
-import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
+import {Component, effect, inject, signal} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
-import {map} from 'rxjs';
-import {ActivatedRoute} from '@angular/router';
-import {JsonPipe, NgIf} from '@angular/common';
+import {map, take} from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Location, NgIf} from '@angular/common';
 import {UpdateCalendarEvent} from '../../event/models/add-calendar-event.model';
+import {EventBasicFormService} from '../../event/services/event-basic-form.service';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {EventApiService} from '../../event/services/event-api.service';
+import {updateEventFromChanges} from '../../event/mappers/event.mapper';
+import {FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatDatetimepickerModule, MatNativeDatetimeModule} from '@mat-datetimepicker/core';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
-  standalone: true,
-  selector: 'app-event-details-container',
   imports: [
     NgIf,
-    JsonPipe
+    MatProgressSpinnerModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatetimepickerModule,
+    MatNativeDatetimeModule,
+    MatButtonModule,
+    MatIconModule
   ],
-  templateUrl: './event-details-container.component.html',
-  styleUrl: './event-details-container.component.scss'
+  providers: [EventBasicFormService, EventApiService],
+  selector: 'app-event-details-container',
+  standalone: true,
+  styleUrl: './event-details-container.component.scss',
+  templateUrl: './event-details-container.component.html'
 })
 export class EventDetailsContainerComponent {
   private route = inject(ActivatedRoute);
-  // private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
+  private location = inject(Location);
+  private formService = inject(EventBasicFormService);
+  private apiService = inject(EventApiService);
   private id = toSignal(this.route.paramMap.pipe(map(p => p.get('id'))), {initialValue: null});
+  private readonly routeState: Partial<UpdateCalendarEvent>;
 
-  initialData = signal<Partial<UpdateCalendarEvent> | null>(null);
+  public form: FormGroup = this.formService.form;
+  public isLoading = signal(false);
 
   constructor() {
+    this.routeState = this.router.getCurrentNavigation()?.extras.state as Partial<UpdateCalendarEvent>;
+
     effect(() => {
       const id = this.id();
       if (!id) {
         return;
       }
-      const updateCalendarEvent: Partial<UpdateCalendarEvent> = window.history.state || {};
       if (id === 'new') {
-        this.initialData.set(updateCalendarEvent);
+        this.onCreate();
       } else {
-        console.log('Edit mode window.history.state', updateCalendarEvent);
-        // this.eventService.getEventById(id).subscribe((e) => this.event.set(e));
+        this.onUpdate(id);
       }
     });
+
+    this.location.replaceState(this.router.url);
   }
 
-  isNew() {
-    return this.id() === 'new';
+  private onCreate(): void {
+    if (this.routeState) {
+      this.formService.patchValue(this.routeState);
+    }
+  }
+
+  private onUpdate(id: string): void {
+    this.isLoading.set(true);
+    this.apiService.getEvent$(id).pipe(take(1)).subscribe(calendarEvent => {
+      this.formService.patchValue(updateEventFromChanges(calendarEvent, this.routeState));
+      this.isLoading.set(false);
+    });
   }
 }

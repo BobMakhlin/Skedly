@@ -55,7 +55,7 @@ export class EventModalComponent {
     this.form.markAllAsTouched();
     if (this.form.valid) {
       this.dialogRef.close({
-        updateCalendarEvent: this.form.value as Partial<UpdateCalendarEvent>,
+        updateCalendarEvent: this.formService.getValue(),
         operation
       });
     }

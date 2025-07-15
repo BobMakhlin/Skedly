@@ -30,7 +30,6 @@ export class EventBasicFormService {
   });
 
   // TODO: consider defining timezone globally for datepickers.
-
   public patchValue(value: Partial<UpdateCalendarEvent>): void {
     const start = value.start ? applyTimeZone(value.start, this.readonlyTimezone.timezone) : null;
     const end = value.end ? applyTimeZone(value.end, this.readonlyTimezone.timezone) : null;
@@ -39,5 +38,13 @@ export class EventBasicFormService {
       start,
       end
     });
+  }
+
+  public getValue(): Partial<UpdateCalendarEvent> {
+    return {
+      ...this.form.value,
+      start: this.form.value.start?.toISOString(),
+      end: this.form.value.end?.toISOString(),
+    } as Partial<UpdateCalendarEvent>;
   }
 }
