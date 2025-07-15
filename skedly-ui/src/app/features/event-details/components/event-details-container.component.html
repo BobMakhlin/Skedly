@@ -45,10 +45,22 @@
       <mat-error *ngIf="form.get('end')?.hasError('required')">End is required</mat-error>
     </mat-form-field>
 
+    <!-- Location -->
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Location</mat-label>
+      <input matInput formControlName="location" />
+    </mat-form-field>
+
     <!-- Cross-field validation -->
     <mat-error *ngIf="form.errors?.['startAfterEnd']">
       Start must be before end
     </mat-error>
+
+    <div class="button-row">
+      <button mat-raised-button color="primary" type="submit" (click)="onSave()">
+        Save
+      </button>
+    </div>
   </form>
 
 </ng-template>

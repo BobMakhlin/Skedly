@@ -10,7 +10,7 @@ import {NgIf} from '@angular/common';
 import {MatDatetimepickerModule, MatNativeDatetimeModule} from '@mat-datetimepicker/core';
 import {EventModalResult, EventModalResultOperation} from '../../models/event-modal-result.model';
 import {UpdateCalendarEvent} from '../../../event/models/add-calendar-event.model';
-import {EventBasicFormService} from '../../../event/services/event-basic-form.service';
+import {EventModalFormService} from '../../services/event-modal-form.service';
 
 @Component({
   selector: 'app-event-modal',
@@ -29,10 +29,10 @@ import {EventBasicFormService} from '../../../event/services/event-basic-form.se
     MatNativeDatetimeModule,
     NgIf,
   ],
-  providers: [EventBasicFormService]
+  providers: [EventModalFormService]
 })
 export class EventModalComponent {
-  private formService = inject(EventBasicFormService);
+  private formService = inject(EventModalFormService);
   private dialogRef: MatDialogRef<EventModalComponent, EventModalResult> = inject(MatDialogRef<EventModalComponent, EventModalResult>);
   public data?: Partial<UpdateCalendarEvent> = inject(MAT_DIALOG_DATA);
   public readonly form = this.formService.form;

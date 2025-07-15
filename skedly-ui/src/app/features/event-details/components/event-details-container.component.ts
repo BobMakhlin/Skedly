@@ -4,7 +4,6 @@ import {map, take} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Location, NgIf} from '@angular/common';
 import {UpdateCalendarEvent} from '../../event/models/add-calendar-event.model';
-import {EventBasicFormService} from '../../event/services/event-basic-form.service';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {EventApiService} from '../../event/services/event-api.service';
 import {updateEventFromChanges} from '../../event/mappers/event.mapper';
@@ -14,6 +13,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatDatetimepickerModule, MatNativeDatetimeModule} from '@mat-datetimepicker/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import {EventDetailsFormService} from '../services/event-details-form.service';
 
 @Component({
   imports: [
@@ -27,7 +27,7 @@ import {MatIconModule} from '@angular/material/icon';
     MatButtonModule,
     MatIconModule
   ],
-  providers: [EventBasicFormService, EventApiService],
+  providers: [EventDetailsFormService, EventApiService],
   selector: 'app-event-details-container',
   standalone: true,
   styleUrl: './event-details-container.component.scss',
@@ -37,7 +37,7 @@ export class EventDetailsContainerComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private location = inject(Location);
-  private formService = inject(EventBasicFormService);
+  private formService = inject(EventDetailsFormService);
   private apiService = inject(EventApiService);
   private id = toSignal(this.route.paramMap.pipe(map(p => p.get('id'))), {initialValue: null});
   private readonly routeState: Partial<UpdateCalendarEvent>;
@@ -75,5 +75,17 @@ export class EventDetailsContainerComponent {
       this.formService.patchValue(updateEventFromChanges(calendarEvent, this.routeState));
       this.isLoading.set(false);
     });
+  }
+
+  onSave() {
+    if (this.id() === 'new') {
+      this.apiService.postEvent$(this.formService.getValue() as UpdateCalendarEvent).pipe(take(1)).subscribe(calendarEvent => {
+        this.router.navigateByUrl(`/events/${calendarEvent.id}`).then();
+      })
+    } else {
+      this.apiService.putEvent$(this.id() as string, this.formService.getValue() as UpdateCalendarEvent).pipe(take(1)).subscribe(calendarEvent => {
+        this.formService.patchValue(calendarEvent);
+      })
+    }
   }
 }
