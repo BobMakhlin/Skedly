@@ -27,6 +27,9 @@
     <mat-datetimepicker #endPicker type="datetime"></mat-datetimepicker>
   </mat-form-field>
 
+  <div *ngIf="form.errors?.['startAfterEnd']">
+    <mat-error>Start must be before End</mat-error>
+  </div>
 </form>
 
 <mat-dialog-actions align="end">

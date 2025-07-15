@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {ReactiveFormsModule} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
@@ -10,8 +10,6 @@ import {NgIf} from '@angular/common';
 import {MatDatetimepickerModule, MatNativeDatetimeModule} from '@mat-datetimepicker/core';
 import {EventModalResult, EventModalResultOperation} from '../../models/event-modal-result.model';
 import {UpdateCalendarEvent} from '../../../event/models/add-calendar-event.model';
-import {applyTimeZone} from '../../../../core/utils/date-time.utils';
-import {READONLY_TIMEZONE} from '../../../../core/timezone/timezone';
 import {EventBasicFormService} from '../../../event/services/event-basic-form.service';
 
 @Component({
@@ -29,7 +27,7 @@ import {EventBasicFormService} from '../../../event/services/event-basic-form.se
     MatNativeDateModule,
     MatDatetimepickerModule,
     MatNativeDatetimeModule,
-    NgIf
+    NgIf,
   ],
   providers: [EventBasicFormService]
 })

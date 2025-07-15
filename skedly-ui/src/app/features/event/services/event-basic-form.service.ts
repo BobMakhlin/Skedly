@@ -1,8 +1,19 @@
 import {inject, Injectable} from '@angular/core';
-import {FormBuilder, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {UpdateCalendarEvent} from '../models/add-calendar-event.model';
 import {applyTimeZone} from '../../../core/utils/date-time.utils';
 import {READONLY_TIMEZONE} from '../../../core/timezone/timezone';
+
+function startBeforeEndValidator(): ValidatorFn {
+  return (group: AbstractControl): ValidationErrors | null => {
+    const start = group.get('start')?.value;
+    const end = group.get('end')?.value;
+    if (start && end && start >= end) {
+      return {startAfterEnd: true};
+    }
+    return null;
+  };
+}
 
 @Injectable()
 export class EventBasicFormService {
@@ -14,6 +25,8 @@ export class EventBasicFormService {
     description: this.fb.control(''),
     start: this.fb.control<Date | null>(null, {validators: [Validators.required]}),
     end: this.fb.control<Date | null>(null, {validators: [Validators.required]}),
+  }, {
+    validators: [startBeforeEndValidator()]
   });
 
   public patchValue(value: Partial<UpdateCalendarEvent>): void {
