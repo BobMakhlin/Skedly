@@ -1,8 +1,9 @@
-import {Component, effect, inject, signal} from '@angular/core';
+import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {map} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {JsonPipe, NgIf} from '@angular/common';
+import {UpdateCalendarEvent} from '../../event/models/add-calendar-event.model';
 
 @Component({
   standalone: true,
@@ -16,10 +17,10 @@ import {JsonPipe, NgIf} from '@angular/common';
 })
 export class EventDetailsContainerComponent {
   private route = inject(ActivatedRoute);
-  private id = toSignal(this.route.paramMap.pipe(map(p => p.get('id'))), { initialValue: null });
+  // private destroyRef = inject(DestroyRef);
+  private id = toSignal(this.route.paramMap.pipe(map(p => p.get('id'))), {initialValue: null});
 
-  // event = signal<CalendarEvent | null>(null);
-  initialData = signal<any | null>(null);
+  initialData = signal<Partial<UpdateCalendarEvent> | null>(null);
 
   constructor() {
     effect(() => {
@@ -27,9 +28,11 @@ export class EventDetailsContainerComponent {
       if (!id) {
         return;
       }
+      const updateCalendarEvent: Partial<UpdateCalendarEvent> = window.history.state || {};
       if (id === 'new') {
-        this.initialData.set(window.history.state || {});
+        this.initialData.set(updateCalendarEvent);
       } else {
+        console.log('Edit mode window.history.state', updateCalendarEvent);
         // this.eventService.getEventById(id).subscribe((e) => this.event.set(e));
       }
     });

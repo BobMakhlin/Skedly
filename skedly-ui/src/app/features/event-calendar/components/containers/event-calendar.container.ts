@@ -10,6 +10,7 @@ import {UpdateCalendarEvent} from '../../../event/models/add-calendar-event.mode
 import {eventInputToUpdateCalendarEvent} from '../../../event/mappers/event.mapper';
 import {READONLY_TIMEZONE} from '../../../../core/timezone/timezone';
 import {AsyncPipe} from '@angular/common';
+import {CalendarEvent} from '../../../event/models/calendar-event.model';
 
 
 @Component({
@@ -44,13 +45,11 @@ export class EventCalendarContainer {
     if (eventInput) {
       this.eventModalFacade.openEditModal$(eventInputToUpdateCalendarEvent(eventInput)).pipe(take(1), filter(Boolean)).subscribe(eventModalResult => {
         if (eventModalResult.operation === EventModalResultOperation.OpenEventDetails) {
-          this.router.navigate([`/events/${id}`]).then();
+          this.router.navigate([`/events/${id}`], {
+            state: eventModalResult.updateCalendarEvent,
+          }).then();
         } else if (eventModalResult.operation === EventModalResultOperation.Submit) {
-          this.apiService.putEvent$(id, eventModalResult.updateCalendarEvent as UpdateCalendarEvent).pipe(take(1)).subscribe(calendarEvent => {
-            this.events.update(events => events.map(event =>
-              event === eventInput ? calendarEvent : event
-            ));
-          })
+          this.apiService.putEvent$(id, eventModalResult.updateCalendarEvent as UpdateCalendarEvent).pipe(take(1)).subscribe(calendarEvent => this.replaceEvent(eventInput, calendarEvent));
         }
       });
     }
@@ -63,10 +62,18 @@ export class EventCalendarContainer {
           state: eventModalResult.updateCalendarEvent,
         }).then();
       } else if (eventModalResult.operation === EventModalResultOperation.Submit) {
-        this.apiService.postEvent$(eventModalResult.updateCalendarEvent as UpdateCalendarEvent).pipe(take(1)).subscribe(calendarEvent => {
-          this.events.update(events => [...events, calendarEvent]);
-        })
+        this.apiService.postEvent$(eventModalResult.updateCalendarEvent as UpdateCalendarEvent).pipe(take(1)).subscribe(calendarEvent => this.addEvent(calendarEvent));
       }
     });
+  }
+
+  private addEvent(calendarEvent: CalendarEvent): void {
+    this.events.update(events => [...events, calendarEvent]);
+  }
+
+  private replaceEvent(oldEvent: EventInput, newEvent: CalendarEvent): void {
+    this.events.update(events => events.map(event =>
+      event === oldEvent ? newEvent : event
+    ));
   }
 }
