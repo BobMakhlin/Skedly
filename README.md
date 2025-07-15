@@ -1,3 +1,7 @@
+# Skedly
+
+Skedly is a scheduling and calendar management tool designed to simplify event planning
+It allows users to manage calendar events with a modern UI, enabling easy event creation, editing, timezone handling, and lazy loading of calendar data.
 
 ## Technical stack
 
@@ -9,6 +13,24 @@
 - Kubernetes
 - Angular 19
 - Material
+
+## How to run locally
+
+Prerequisites:
+1. Docker
+2. Minikube or Kind (or any local K8s cluster)
+3. kubectl
+4. Helm
+5. Make
+
+To install third-party dependencies and deploy your app:
+```
+make -C ./infra all
+```
+
+- API will be available via http://localhost:30001/skedly-api
+- UI will be available via http://localhost:30000
+- All API endpoints are documented and accessible via Swagger UI.
 
 ## Next steps
 
@@ -23,5 +45,5 @@ If the project grows to include more services and dependencies
 ## Known issues
 
 Switching timezone via the header input in real time, sometimes leads to inconsistent datetime conversions in mat-datetimepickers.
-Consider using moment and appropriate adapter instead of relying on JS-native Dates and luxons conversions under the hood.
+Consider using moment and appropriate adapter instead of relying on JS-native Dates and Luxon's conversions under the hood.
 
