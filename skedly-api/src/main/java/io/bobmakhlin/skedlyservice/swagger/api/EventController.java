@@ -1,12 +1,11 @@
 package io.bobmakhlin.skedlyservice.swagger.api;
 
-import io.bobmakhlin.skedlyservice.swagger.models.UpdateCalendarEvent;
 import io.bobmakhlin.skedlyservice.swagger.models.CalendarEvent;
+import io.bobmakhlin.skedlyservice.swagger.models.UpdateCalendarEvent;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,5 +50,11 @@ public class EventController {
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         eventApiDelegate.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get event by ID")
+    public CalendarEvent getEventById(@PathVariable UUID id) {
+        return eventApiDelegate.getEventById(id);
     }
 }

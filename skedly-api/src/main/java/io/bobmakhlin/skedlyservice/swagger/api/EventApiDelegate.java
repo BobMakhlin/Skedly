@@ -15,4 +15,6 @@ public interface EventApiDelegate {
     CalendarEvent update(UUID id, UpdateCalendarEvent updateCalendarEvent);
 
     void delete(UUID id);
+
+    CalendarEvent getEventById(UUID id);
 }

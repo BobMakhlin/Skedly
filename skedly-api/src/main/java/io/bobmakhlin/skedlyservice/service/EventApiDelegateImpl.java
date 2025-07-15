@@ -50,4 +50,10 @@ public class EventApiDelegateImpl implements EventApiDelegate {
         var entity = eventRepository.findById(id).orElseThrow(() -> new ItemNotFoundException(id));
         eventRepository.delete(entity);
     }
+
+    @Override
+    public CalendarEvent getEventById(UUID id) {
+        var entity = eventRepository.findById(id).orElseThrow(() -> new ItemNotFoundException(id));
+        return eventMapper.eventEntityToCalendarEvent(entity);
+    }
 }
