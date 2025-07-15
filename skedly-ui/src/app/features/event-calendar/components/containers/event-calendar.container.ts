@@ -8,16 +8,20 @@ import {EventModalResultOperation} from '../../models/event-modal-result.model';
 import {Router} from '@angular/router';
 import {UpdateCalendarEvent} from '../../../event/models/add-calendar-event.model';
 import {eventInputToUpdateCalendarEvent} from '../../../event/mappers/event.mapper';
+import {READONLY_TIMEZONE} from '../../../../core/timezone/timezone';
+import {AsyncPipe} from '@angular/common';
 
 
 @Component({
   selector: 'app-event-calendar-container',
   imports: [
-    SkedlyUiMonthCalendarComponent
+    SkedlyUiMonthCalendarComponent,
+    AsyncPipe
   ],
   providers: [EventApiService, EventModalFacadeService],
   template: `
-    <skedly-ui-month-calendar [events]="events" (lazyLoad)="onLazyLoad($event)" (addClick)="onAddClick()"
+    <skedly-ui-month-calendar [timeZone]="activeTimezone$ | async" [events]="events" (lazyLoad)="onLazyLoad($event)"
+                              (addClick)="onAddClick()"
                               (eventClick)="onEventClick($event)"></skedly-ui-month-calendar>`,
 })
 export class EventCalendarContainer {
@@ -26,6 +30,8 @@ export class EventCalendarContainer {
   private apiService = inject(EventApiService);
   private eventModalFacade = inject(EventModalFacadeService);
   private router: Router = inject(Router);
+  private readonlyTimezone = inject(READONLY_TIMEZONE);
+  public activeTimezone$ = this.readonlyTimezone.timezone$;
 
   onLazyLoad(event: { start: Date; end: Date; }): void {
     this.apiService.getEvents$(event.start, event.end).pipe(take(1)).subscribe((calendarEvents) => {
