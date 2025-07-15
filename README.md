@@ -44,6 +44,6 @@ If the project grows to include more services and dependencies
 
 ## Known issues
 
-Switching timezone via the header input in real time, sometimes leads to inconsistent datetime conversions in mat-datetimepickers.
+Switching timezone via the header input in real time sometimes leads to inconsistent datetime conversions in mat-datetimepickers.
 Consider using moment and appropriate adapter instead of relying on JS-native Dates and Luxon's conversions under the hood.
 
