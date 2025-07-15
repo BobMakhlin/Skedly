@@ -32,7 +32,7 @@ make -C ./infra all
 ```
 
 - API will be available via http://localhost:30001/skedly-api
-- UI will be available via http://localhost:30000
+- UI will be available via http://localhost:30000/
 - All API endpoints are documented and accessible via Swagger UI.
 
 ## Next steps
