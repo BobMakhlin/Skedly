@@ -12,7 +12,7 @@ import {EventModalResult, EventModalResultOperation} from '../../models/event-mo
 import {UpdateCalendarEvent} from '../../../event/models/add-calendar-event.model';
 import {applyTimeZone} from '../../../../core/utils/date-time.utils';
 import {READONLY_TIMEZONE} from '../../../../core/timezone/timezone';
-import {DateTime} from 'luxon';
+import {EventBasicFormService} from '../../../event/services/event-basic-form.service';
 
 @Component({
   selector: 'app-event-modal',
@@ -31,22 +31,18 @@ import {DateTime} from 'luxon';
     MatNativeDatetimeModule,
     NgIf
   ],
+  providers: [EventBasicFormService]
 })
 export class EventModalComponent {
-  private fb: FormBuilder = inject(FormBuilder);
+  private formService = inject(EventBasicFormService);
   private dialogRef: MatDialogRef<EventModalComponent, EventModalResult> = inject(MatDialogRef<EventModalComponent, EventModalResult>);
-  private readonlyTimezone = inject(READONLY_TIMEZONE);
   public data?: Partial<UpdateCalendarEvent> = inject(MAT_DIALOG_DATA);
-
-  form = this.fb.group({
-    title: this.fb.control('', {validators: [Validators.required]}),
-    description: this.fb.control(''),
-    start: this.fb.control<Date | null>(null, {validators: [Validators.required]}),
-    end: this.fb.control<Date | null>(null, {validators: [Validators.required]}),
-  });
+  public readonly form = this.formService.form;
 
   constructor() {
-    this.patchFormValue();
+    if (this.data) {
+      this.formService.patchValue(this.data);
+    }
   }
 
   onSubmit() {
@@ -63,18 +59,6 @@ export class EventModalComponent {
       this.dialogRef.close({
         updateCalendarEvent: this.form.value as Partial<UpdateCalendarEvent>,
         operation
-      });
-    }
-  }
-
-  private patchFormValue() {
-    if (this.data) {
-      const start = this.data.start ? applyTimeZone(this.data.start, this.readonlyTimezone.timezone) : null;
-      const end = this.data.end ? applyTimeZone(this.data.end, this.readonlyTimezone.timezone) : null;
-      this.form.patchValue({
-        ...this.data,
-        start,
-        end
       });
     }
   }

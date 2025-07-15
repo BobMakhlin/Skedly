@@ -11,8 +11,6 @@ export class EventApiService {
   }
 
   getEvents$(startDate: Date, endDate: Date): Observable<CalendarEvent[]> {
-    console.log('API URL:', this.env.apiUrl);
-
     const params = new HttpParams()
       .set('startDate', startDate.toISOString())
       .set('endDate', endDate.toISOString());
