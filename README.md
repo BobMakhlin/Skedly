@@ -19,12 +19,15 @@ It allows users to manage calendar events with a modern UI, enabling easy event 
 Prerequisites:
 1. Docker
 2. Minikube or Kind (or any local K8s cluster)
-3. kubectl
-4. Helm
-5. Make
+3. Helm
+4. Make
 
 To install third-party dependencies and deploy your app:
 ```
+# Add helm repos (optional)
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+# 
 make -C ./infra all
 ```
 
